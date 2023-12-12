@@ -13,15 +13,17 @@ class Fifth
 
 public:
     vector<long> seeds;
-    map<long, long> seed2Soil;
-    map<long, long> soil2Fert;
-    map<long, long> fert2Water;
-    map<long, long> water2Light;
-    map<long, long> light2Temp;
-    map<long, long> temp2hum;
-    map<long, long> hum2Location;
+    vector<vector<long>> seed2Soil;
+    vector<vector<long>> soil2Fert;
+    vector<vector<long>> fert2Water;
+    vector<vector<long>> water2Light;
+    vector<vector<long>> light2Temp;
+    vector<vector<long>> temp2hum;
+    vector<vector<long>> hum2Location;
+
     enum MapType{Seed2Soil = 1, Soil2Fert = 2, Fert2Water = 3, Water2Light = 4, Light2Temp = 5, Temp2Hum = 6, Hum2Location = 7};
     void findSeeds(string s) {
+        seeds.clear();
         string currentNumberString = "";
         for (int i = 7; i <= s.length(); i++) {
             if (isdigit(s[i])) {
@@ -56,67 +58,112 @@ public:
                     numberString = "";
                 }
             }
-            for(long x = 0; x < range; x++) {
             switch(mapType) {
                 case Seed2Soil:
-                    seed2Soil[startSourceIndex+x] = startDestIndex + x;
+                    seed2Soil.push_back({startDestIndex, startSourceIndex, range});
                     break;
                 case Soil2Fert:
-                    soil2Fert[startSourceIndex+x] = startDestIndex + x;
+                    soil2Fert.push_back({startDestIndex, startSourceIndex, range});
                     break;
                 case Fert2Water:
-                    fert2Water[startSourceIndex+x] = startDestIndex + x;
+                    fert2Water.push_back({startDestIndex, startSourceIndex, range});
                     break;
                 case Water2Light:
-                    water2Light[startSourceIndex+x] = startDestIndex + x;
+                    water2Light.push_back({startDestIndex, startSourceIndex, range});
                     break;
                 case Light2Temp:
-                    light2Temp[startSourceIndex+x] = startDestIndex + x;
+                    light2Temp.push_back({startDestIndex, startSourceIndex, range});
                     break;
                 case Temp2Hum:
-                    temp2hum[startSourceIndex+x] = startDestIndex + x;
+                    temp2hum.push_back({startDestIndex, startSourceIndex, range});
                     break;
                 case Hum2Location:
-                    hum2Location[startSourceIndex+x] = startDestIndex + x;
+                    hum2Location.push_back({startDestIndex, startSourceIndex, range});
                     break;
                 default:
                     break;
                 }
-            }
         }
     }
 
     long getLowestLocation() {
         long lowestValue = -1;
-
         for(int i = 0; i < seeds.size(); i++) {
             long currentSeed = seeds[i];
-            long newValue;
-            if(seed2Soil[currentSeed]) {
-                newValue = seed2Soil[currentSeed];
-            } else {
-                newValue = currentSeed;
+            cout << currentSeed << endl;
+            for(int i = 0; i < seed2Soil.size(); i++) {
+                vector<long> map = seed2Soil[i];
+                for(long j = map[1]; j < map[1] + map[2]; j++) {
+                    if(j == currentSeed) {
+                        long diff = map[1] - map[0];
+                        currentSeed = j - (diff);
+                        break;
+                    }
+                }
             }
-            if(soil2Fert[newValue]) {
-                newValue = soil2Fert[newValue];
+            for(int i = 0; i < soil2Fert.size(); i++) {
+                vector<long> map = soil2Fert[i];
+                for(long j = map[1]; j < map[1] + map[2]; j++) {
+                    if(j == currentSeed) {
+                        long diff = map[1] - map[0];
+                        currentSeed = j - (diff);
+                        break;
+                    }
+                }
             }
-            if(fert2Water[newValue]) {
-                newValue = fert2Water[newValue];
-            } 
-            if(water2Light[newValue]) {
-                newValue = water2Light[newValue];
-            } 
-            if(light2Temp[newValue]) {
-                newValue = light2Temp[newValue];
+            for(int i = 0; i < fert2Water.size(); i++) {
+                vector<long> map = fert2Water[i];
+                for(long j = map[1]; j < map[1] + map[2]; j++) {
+                    if(j == currentSeed) {
+                        long diff = map[1] - map[0];
+                        currentSeed = j - (diff);
+                        break;
+                    }
+                }
             }
-            if(temp2hum[newValue]) {
-                newValue = temp2hum[newValue];
+  
+            for(int i = 0; i < water2Light.size(); i++) {
+                vector<long> map = water2Light[i];
+                for(long j = map[1]; j < map[1] + map[2]; j++) {
+                    if(j == currentSeed) {
+                        long diff = map[1] - map[0];
+                        currentSeed = j - (diff);
+                        break;
+                    }
+                }
             }
-            if(hum2Location[newValue]) {
-                newValue = hum2Location[newValue];
+            for(int i = 0; i < light2Temp.size(); i++) {
+                vector<long> map = light2Temp[i];
+                for(long j = map[1]; j < map[1] + map[2]; j++) {
+                    if(j == currentSeed) {
+                        long diff = map[1] - map[0];
+                        currentSeed = j - (diff);
+                        break;
+                    }
+                }
             }
-            if(lowestValue == -1 || lowestValue > newValue) {
-                lowestValue = newValue;
+            for(int i = 0; i < temp2hum.size(); i++) {
+                vector<long> map = temp2hum[i];
+                for(long j = map[1]; j < map[1] + map[2]; j++) {
+                    if(j == currentSeed) {
+                        long diff = map[1] - map[0];
+                        currentSeed = j - (diff);
+                        break;
+                    }
+                }
+            }
+            for(int i = 0; i < hum2Location.size(); i++) {
+                vector<long> map = hum2Location[i];
+                for(long j = map[0]; j < map[1] + map[2]; j++) {
+                    if(j == currentSeed) {
+                        long diff = map[1] - map[0];
+                        currentSeed = j - (diff);
+                        break;
+                    }
+                }
+            }
+            if(lowestValue == -1 || lowestValue > currentSeed) {
+                lowestValue = currentSeed;
             }
         }
         return lowestValue;
@@ -126,7 +173,7 @@ public:
 int main()
 {
     Fifth *f = new Fifth();
-    ifstream file("input");
+    ifstream file("testCase");
     string str;
     vector<string> ranges;
     bool pushingBack = false;
